@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Camera Capture Helper icon</title>
+  <desc id="desc">Synthetic camera icon with a teal gradient body, warm lens glow, and CLI prompt motif.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f1938"/>
+      <stop offset="100%" stop-color="#0d6b94"/>
+    </linearGradient>
+  </defs>
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="url(#bg)"/>
+  <circle cx="512" cy="470" r="320" fill="#ff9f36" opacity="0.2"/>
+  <rect x="205" y="308" width="614" height="370" rx="84" fill="#f4f9ff"/>
+  <rect x="266" y="240" width="164" height="92" rx="30" fill="#f4f9ff"/>
+  <circle cx="512" cy="492" r="160" fill="#15314c"/>
+  <circle cx="512" cy="492" r="136" fill="none" stroke="#1cb0cb" stroke-width="24"/>
+  <circle cx="512" cy="492" r="84" fill="#ffb24d"/>
+  <text x="512" y="794" text-anchor="middle" font-family="SFMono-Regular, Menlo, Monaco, monospace" font-size="152" font-weight="700" fill="#0f1938">&gt;</text>
+</svg>
