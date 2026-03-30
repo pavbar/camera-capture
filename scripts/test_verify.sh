@@ -8,6 +8,10 @@ trap 'rm -rf "$tmp_root"' EXIT
 test_repo="${tmp_root}/repo"
 fake_bin="${tmp_root}/bin"
 log_file="${tmp_root}/verify.log"
+stdout_path="${tmp_root}/verify.stdout"
+stderr_path="${tmp_root}/verify.stderr"
+fail_stdout_path="${tmp_root}/verify-fail.stdout"
+fail_stderr_path="${tmp_root}/verify-fail.stderr"
 mkdir -p "${test_repo}/scripts" "$fake_bin"
 
 cp "${repo_root}/scripts/verify.sh" "${test_repo}/scripts/verify.sh"
@@ -23,6 +27,7 @@ chmod +x "${fake_bin}/swift"
 for script_name in \
   privacy_scan.sh \
   test_privacy_scan.sh \
+  test_helper_cli_contract.sh \
   assemble_helper_app.sh \
   generate_brand_assets.sh \
   install.sh \
@@ -37,12 +42,13 @@ EOF
   chmod +x "${test_repo}/scripts/${script_name}"
 done
 
-PATH="${fake_bin}:$PATH" "${test_repo}/scripts/verify.sh" >/tmp/verify.stdout 2>/tmp/verify.stderr
+PATH="${fake_bin}:$PATH" "${test_repo}/scripts/verify.sh" >"${stdout_path}" 2>"${stderr_path}"
 
 cat > "${tmp_root}/expected.log" <<'EOF'
 swift test
 privacy_scan.sh 
 test_privacy_scan.sh 
+test_helper_cli_contract.sh 
 assemble_helper_app.sh --dry-run
 generate_brand_assets.sh --dry-run
 install.sh --dry-run
@@ -65,7 +71,7 @@ EOF
 chmod +x "${test_repo}/scripts/install.sh"
 : > "${log_file}"
 
-if PATH="${fake_bin}:$PATH" "${test_repo}/scripts/verify.sh" >/tmp/verify-fail.stdout 2>/tmp/verify-fail.stderr; then
+if PATH="${fake_bin}:$PATH" "${test_repo}/scripts/verify.sh" >"${fail_stdout_path}" 2>"${fail_stderr_path}"; then
   echo "expected verify.sh to fail when a verification step fails" >&2
   exit 1
 fi

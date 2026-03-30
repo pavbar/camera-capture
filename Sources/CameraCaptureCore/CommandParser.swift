@@ -90,7 +90,12 @@ public enum CommandParser {
             case "--delay":
                 index += 1
                 let value = try value(after: index, arguments: arguments, flag: "--delay")
-                guard let parsed = Double(value), parsed >= 0 else {
+                guard
+                    let parsed = Double(value),
+                    parsed.isFinite,
+                    parsed >= 0,
+                    parsed <= CaptureRequest.maximumDelaySeconds
+                else {
                     throw CameraCaptureError.invalidValue(flag: "--delay", value: value)
                 }
                 delaySeconds = parsed
@@ -114,6 +119,9 @@ public enum CommandParser {
         }
         if backend == .simulated, cameraSelector != nil {
             throw CameraCaptureError.unsupported("--camera is only supported with --backend real")
+        }
+        if backend == .simulated, delaySeconds > 0 {
+            throw CameraCaptureError.unsupported("--delay is only supported with --backend real")
         }
         if backend == .real, preset != nil {
             throw CameraCaptureError.unsupported("--preset is only supported with --backend simulated")

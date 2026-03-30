@@ -16,7 +16,6 @@ public struct AppDependencies {
     public let currentDirectory: URL
     public let outputPathResolver: OutputPathResolver
     public let deviceService: any DeviceListing
-    public let accessService: any AccessRequesting
     public let simulatedCaptureService: any SimulatedCapturing
     public let realCaptureInvokerFactory: @Sendable () throws -> any RealCaptureInvoking
     public let realPreviewInvokerFactory: @Sendable () throws -> any RealPreviewInvoking
@@ -26,7 +25,6 @@ public struct AppDependencies {
         currentDirectory: URL,
         outputPathResolver: OutputPathResolver,
         deviceService: any DeviceListing,
-        accessService: any AccessRequesting,
         simulatedCaptureService: any SimulatedCapturing,
         realCaptureInvokerFactory: @escaping @Sendable () throws -> any RealCaptureInvoking,
         realPreviewInvokerFactory: @escaping @Sendable () throws -> any RealPreviewInvoking,
@@ -35,7 +33,6 @@ public struct AppDependencies {
         self.currentDirectory = currentDirectory
         self.outputPathResolver = outputPathResolver
         self.deviceService = deviceService
-        self.accessService = accessService
         self.simulatedCaptureService = simulatedCaptureService
         self.realCaptureInvokerFactory = realCaptureInvokerFactory
         self.realPreviewInvokerFactory = realPreviewInvokerFactory

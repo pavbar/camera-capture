@@ -31,6 +31,36 @@ struct CameraCaptureCoreTests {
         }
     }
 
+    @Test func rejectsDelayForSimulatedBackend() throws {
+        #expect(throws: CameraCaptureError.unsupported("--delay is only supported with --backend real")) {
+            try CommandParser.parse(arguments: [
+                "capture",
+                "--backend", "simulated",
+                "--delay", "1",
+            ])
+        }
+    }
+
+    @Test func rejectsNonFiniteDelayValues() throws {
+        #expect(throws: CameraCaptureError.invalidValue(flag: "--delay", value: "inf")) {
+            try CommandParser.parse(arguments: [
+                "capture",
+                "--backend", "real",
+                "--delay", "inf",
+            ])
+        }
+    }
+
+    @Test func rejectsOverflowingDelayValues() throws {
+        #expect(throws: CameraCaptureError.invalidValue(flag: "--delay", value: "18446744074")) {
+            try CommandParser.parse(arguments: [
+                "capture",
+                "--backend", "real",
+                "--delay", "18446744074",
+            ])
+        }
+    }
+
     @Test func parsesPreviewCommand() throws {
         let command = try CommandParser.parse(arguments: [
             "preview",
@@ -165,7 +195,6 @@ struct CameraCaptureCoreTests {
     @Test func requestAccessUsesRealHelperInvoker() {
         let controller = AppController(
             dependencies: .testDefault(
-                accessService: PermissionProbe(result: .restricted),
                 realAccessInvokerFactory: { RealAccessProbe(result: .granted) }
             )
         )
@@ -313,14 +342,6 @@ private struct RealAccessProbe: RealAccessInvoking {
     }
 }
 
-private struct PermissionProbe: AccessRequesting {
-    let result: PermissionState
-
-    func requestAccess() throws -> PermissionState {
-        result
-    }
-}
-
 private final class TransportProbe: HelperTransporting, @unchecked Sendable {
     var lastRequest: HelperRequestEnvelope?
 
@@ -351,7 +372,6 @@ private final class CommandRunnerProbe: CommandRunning, @unchecked Sendable {
 private extension AppDependencies {
     static func testDefault(
         currentDirectory: URL = FileManager.default.temporaryDirectory,
-        accessService: any AccessRequesting = PermissionProbe(result: .granted),
         realCaptureInvokerFactory: @escaping @Sendable () throws -> any RealCaptureInvoking = { RealCaptureProbe() },
         realPreviewInvokerFactory: @escaping @Sendable () throws -> any RealPreviewInvoking = { RealPreviewProbe() },
         realAccessInvokerFactory: @escaping @Sendable () throws -> any RealAccessInvoking = { RealAccessProbe(result: .granted) }
@@ -364,7 +384,6 @@ private extension AppDependencies {
                 homeDirectory: { currentDirectory }
             ),
             deviceService: DeviceProbe(),
-            accessService: accessService,
             simulatedCaptureService: SimulatedCaptureService(),
             realCaptureInvokerFactory: realCaptureInvokerFactory,
             realPreviewInvokerFactory: realPreviewInvokerFactory,

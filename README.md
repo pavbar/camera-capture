@@ -18,7 +18,7 @@ The default capture path is `~/Pictures/Camera Capture/<timestamp>.jpg`.
 
 ## Install
 
-Install both executables into `~/.local/bin`:
+Install the CLI into `~/.local/bin` and the helper app into `~/Applications`:
 
 ```bash
 ./scripts/install.sh
@@ -112,9 +112,8 @@ Requests macOS Camera permission for the real-camera flow and prints the resulti
 - `granted`
 - `denied`
 - `restricted`
-- `not-determined`
 
-Use this when you want to surface the permission prompt before attempting a real capture.
+If permission has not been requested yet, this command triggers the prompt and then prints the resulting final state.
 
 ### `list-presets`
 

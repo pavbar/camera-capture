@@ -1,5 +1,6 @@
 import Foundation
 import Darwin
+import Dispatch
 
 #if canImport(AVFoundation)
 import AVFoundation
@@ -7,10 +8,6 @@ import AVFoundation
 
 public protocol DeviceListing: Sendable {
     func listDevices() throws -> [CameraDevice]
-}
-
-public protocol AccessRequesting: Sendable {
-    func requestAccess() throws -> PermissionState
 }
 
 public protocol RealCaptureInvoking: Sendable {
@@ -37,40 +34,6 @@ public struct RealCameraDeviceService: DeviceListing, Sendable {
         ).devices.map { CameraDevice(id: $0.uniqueID, name: $0.localizedName) }
         #else
         return []
-        #endif
-    }
-}
-
-public struct CameraAccessService: AccessRequesting, Sendable {
-    public init() {}
-
-    public func requestAccess() throws -> PermissionState {
-        #if canImport(AVFoundation)
-        let status = AVCaptureDevice.authorizationStatus(for: .video)
-        switch status {
-        case .authorized:
-            return .granted
-        case .denied:
-            return .denied
-        case .restricted:
-            return .restricted
-        case .notDetermined:
-            let semaphore = DispatchSemaphore(value: 0)
-            final class AccessBox: @unchecked Sendable {
-                var granted = false
-            }
-            let box = AccessBox()
-            AVCaptureDevice.requestAccess(for: .video) { access in
-                box.granted = access
-                semaphore.signal()
-            }
-            _ = semaphore.wait(timeout: .now() + 15)
-            return box.granted ? .granted : .denied
-        @unknown default:
-            return .restricted
-        }
-        #else
-        return .restricted
         #endif
     }
 }

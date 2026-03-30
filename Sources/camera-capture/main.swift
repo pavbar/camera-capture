@@ -1,14 +1,14 @@
 import CameraCaptureCore
 import Foundation
 
-let executableURL = URL(fileURLWithPath: CommandLine.arguments.first ?? "camera-capture")
+let executableURL = Bundle.main.executableURL
+    ?? URL(fileURLWithPath: CommandLine.arguments.first ?? "camera-capture")
 let currentDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
 
 let dependencies = AppDependencies(
     currentDirectory: currentDirectory,
     outputPathResolver: OutputPathResolver(),
     deviceService: RealCameraDeviceService(),
-    accessService: CameraAccessService(),
     simulatedCaptureService: SimulatedCaptureService(),
     realCaptureInvokerFactory: {
         let target = try HelperLocator.resolve(currentExecutable: executableURL)

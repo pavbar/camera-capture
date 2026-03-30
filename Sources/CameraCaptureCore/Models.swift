@@ -117,6 +117,8 @@ public enum BuildInfo {
 }
 
 public struct CaptureRequest: Codable, Sendable, Equatable {
+    public static let maximumDelaySeconds = Double(UInt64.max) / 1_000_000_000
+
     public let outputPath: String?
     public let backend: CaptureBackend
     public let cameraSelector: String?

@@ -16,7 +16,11 @@ enum HelperCommandParser {
             if forwarded.contains("--backend") == false {
                 forwarded += ["--backend", "real"]
             }
-            return try CommandParser.parse(arguments: forwarded)
+            let command = try CommandParser.parse(arguments: forwarded)
+            guard case .capture(let request) = command, request.backend == .real else {
+                throw CameraCaptureError.unsupported("helper only supports --backend real for capture")
+            }
+            return command
         case "preview", "request-access":
             return try CommandParser.parse(arguments: arguments)
         default:
@@ -138,7 +142,7 @@ struct RealCaptureHelper {
 
         session.startRunning()
         if request.delaySeconds > 0 {
-            try await Task.sleep(nanoseconds: UInt64(request.delaySeconds * 1_000_000_000))
+            try await Task.sleep(nanoseconds: try validatedDelayNanoseconds(for: request.delaySeconds))
         } else if request.preview {
             try await Task.sleep(nanoseconds: 2_000_000_000)
         }
@@ -212,7 +216,7 @@ struct RealCaptureHelper {
             }
         } else {
             let deadline = Date(timeIntervalSinceNow: request.seconds ?? 10.0)
-            while Date() < deadline {
+            while Date() < deadline && windowController.window?.isVisible == true {
                 if let cancelURL, FileManager.default.fileExists(atPath: cancelURL.path) {
                     break
                 }
@@ -245,6 +249,18 @@ struct RealCaptureHelper {
             throw CameraCaptureError.helperFailed("no real camera devices available")
         }
         return device
+    }
+
+    private func validatedDelayNanoseconds(for seconds: Double) throws -> UInt64 {
+        guard
+            seconds.isFinite,
+            seconds >= 0,
+            seconds <= CaptureRequest.maximumDelaySeconds
+        else {
+            throw CameraCaptureError.invalidValue(flag: "--delay", value: String(seconds))
+        }
+
+        return UInt64(seconds * 1_000_000_000)
     }
 }
 

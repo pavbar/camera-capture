@@ -27,6 +27,7 @@ Update it in the same change when key directories or entrypoints change.
 - `scripts/assemble_helper_app.sh` - assembles `Camera Capture Helper.app` from the built helper executable.
 - `scripts/generate_brand_assets.sh` - generates deterministic icon assets and brand outputs.
 - `scripts/privacy_scan.sh` - public-repo privacy verification script.
+- `scripts/test_helper_cli_contract.sh` - regression test for helper CLI argument constraints.
 - `scripts/test_privacy_scan.sh` - regression test for the privacy scanner and local overlay loading.
 - `scripts/verify.sh` - canonical pre-commit and pre-push verification entrypoint.
 - `scripts/test_verify.sh` - regression test for the verification wrapper ordering and fail-fast behavior.
