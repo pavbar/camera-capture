@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-labelledby="title desc">
+  <title id="title">camera-capture brand mark</title>
+  <desc id="desc">Synthetic wordmark with camera icon and monospaced project name.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f1938"/>
+      <stop offset="100%" stop-color="#0d6b94"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="40" width="192" height="192" rx="44" fill="url(#bg)"/>
+  <circle cx="120" cy="136" r="62" fill="#ff9f36" opacity="0.22"/>
+  <rect x="56" y="104" width="128" height="74" rx="18" fill="#f4f9ff"/>
+  <rect x="68" y="88" width="30" height="20" rx="6" fill="#f4f9ff"/>
+  <circle cx="120" cy="141" r="35" fill="#15314c"/>
+  <circle cx="120" cy="141" r="25" fill="#ffb24d"/>
+  <text x="120" y="208" text-anchor="middle" font-family="SFMono-Regular, Menlo, Monaco, monospace" font-size="34" font-weight="700" fill="#0f1938">&gt;</text>
+  <text x="252" y="136" font-family="SFMono-Regular, Menlo, Monaco, monospace" font-size="52" font-weight="700" fill="#0f1938">camera-capture</text>
+  <text x="252" y="186" font-family="SFMono-Regular, Menlo, Monaco, monospace" font-size="24" fill="#0d6b94">helper app branding</text>
+</svg>
