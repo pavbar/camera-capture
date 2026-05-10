@@ -309,6 +309,9 @@ func handleRequestFile(at path: String) async throws -> Int32 {
             guard let capture = envelope.capture else {
                 throw CameraCaptureError.helperFailed("helper request missing capture payload")
             }
+            if HelperRequestPolicy.requiresInteractivePreview(for: envelope.action, capture: capture) {
+                throw CameraCaptureError.helperFailed("non-preview capture requests must be run interactively; rerun with --preview")
+            }
             let permissionState = await requestCameraAccess()
             guard permissionState == .granted else {
                 throw CameraCaptureError.permissionDenied
