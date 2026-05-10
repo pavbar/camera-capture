@@ -314,6 +314,15 @@ struct CameraCaptureCoreTests {
             try transport.send(request: envelope)
         }
     }
+    @Test func helperRequestPolicyRequiresPreviewForCapture() {
+        let previewCapture = CaptureRequest(outputPath: "/tmp/x.jpg", backend: .real, cameraSelector: nil, preview: true, delaySeconds: 0, preset: nil)
+        let nonPreviewCapture = CaptureRequest(outputPath: "/tmp/x.jpg", backend: .real, cameraSelector: nil, preview: false, delaySeconds: 0, preset: nil)
+
+        #expect(HelperRequestPolicy.requiresInteractivePreview(for: .capture, capture: previewCapture) == false)
+        #expect(HelperRequestPolicy.requiresInteractivePreview(for: .capture, capture: nonPreviewCapture) == true)
+        #expect(HelperRequestPolicy.requiresInteractivePreview(for: .preview, capture: nil) == false)
+    }
+
 }
 
 private final class RealCaptureProbe: RealCaptureInvoking, @unchecked Sendable {

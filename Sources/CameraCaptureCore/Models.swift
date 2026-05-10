@@ -93,6 +93,14 @@ public struct HelperRequestEnvelope: Codable, Sendable, Equatable {
     }
 }
 
+
+public enum HelperRequestPolicy {
+    public static func requiresInteractivePreview(for action: HelperAction, capture: CaptureRequest?) -> Bool {
+        guard action == .capture, let capture else { return false }
+        return capture.preview == false
+    }
+}
+
 public struct HelperResponseEnvelope: Codable, Sendable, Equatable {
     public let success: Bool
     public let permissionState: PermissionState?
